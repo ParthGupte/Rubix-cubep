@@ -13,7 +13,9 @@ class Cube:
         self.Y = np.full((3,3),'Y')
         self.O = np.full((3,3),'O')
         self.cub = {"W":self.W,"R":self.R,"G":self.G,"B":self.B,"Y":self.Y,"O":self.O}
-    
+        self.face_map = {'W':['B','G','R','O'],'B':['Y','W','R','O'],'G':['W','Y','R','O'],'Y':['G','B','R','O'],'R':['B','G','Y','W'],'O':['B','G','W','Y']}
+        self.turn_map = {'W':['','','','',''],'B':['','','-','+'],'G':['','','+','-'],'Y':['','','++','++'],'R':['+','-','++',''],'O':['-','+','','++']}
+        
     def display(self):
         cub = self.cub
         for i in cub.values():
@@ -22,12 +24,23 @@ class Cube:
     def turnface(self,C,sig): #turning an array
         A=np.full([3,3],'')
         if sig=='+':
-            A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[2]),list(C[:,0]),list(C[0]),list(C[:,2]),C[1,1]
+            A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[2]),list(C[:,0])[::-1],list(C[0]),list(C[:,2])[::-1],C[1,1]
+            print(C[2])
         elif sig=='-':
-            A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[0]),list(C[:,2]),list(C[2]),list(C[:,0]),C[1,1]
+            A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[0])[::-1],list(C[:,2]),list(C[2])[::-1],list(C[:,0]),C[1,1]
+        elif sig == 'r0':
+            A[0], A[1], A[2] = list(C[2]), list(C[1]), list(C[0])
+        elif sig == 'r1':
+            A[:,0], A[:,1], A[:,2] = list(C[:,2]), list(C[:,1]), list(C[:,0])
+        else:
+            A = C.copy()
         return A
 
     def turn(self,ar,sig): #turning array plus adjacent stuff
+        '''ar=[[' ','U',' '],
+           ['L','C','R'], 
+           [' ','D',' ']]'''
+        
         C,U,L,R,D=ar[1,1],ar[0,1],ar[1,0],ar[1,2],ar[2,1]
         if sig=='+':
             a,b,c,d=list(D[0]),list(L[:,2]),list(U[2]),list(R[:,0])
@@ -40,14 +53,39 @@ class Cube:
         ar[1,1],ar[0,1],ar[1,0],ar[1,2],ar[2,1]=C,U,L,R,D
         return ar
     
+    def get_side(self,face):
+        cub = self.cub
+        face_map = self.face_map
+        turn_map = self.turn_map
+        C = cub[face].copy()
+        sides = []
+        for i in range(4):
+            F_name = face_map[face][i]
+            F = cub[F_name].copy()
+            for sig in turn_map[F_name][i]:
+                F = self.turnface(F,sig)
+            sides.append(F)
+        L, R, U, D = sides
+        ar = [['',U,''],[L,C,R],['',D,'']]
+        return ar
+            
+
+
+    # def move(self,m):
+    #     cub = self.cub
+    #     face = m[0]
+    #     face_map = self.face_map
+    #     turn_map = self.turn_map
+
+
     def move(self,m):
         cub = self.cub
         if m[0]=='W':
-            C=cub['W']
-            L=cub['B']
-            R=cub['G']
-            U=cub['R']
-            D=cub['O']
+            C=cub['W'].copy()
+            L=cub['B'].copy()
+            R=cub['G'].copy()
+            U=cub['R'].copy()
+            D=cub['O'].copy()
             ar=np.array([[nul,U,nul],[L,C,R],[nul,D,nul]])
             ar=self.turn(ar,m[1])
             C,U,L,R,D=ar[1,1],ar[0,1],ar[1,0],ar[1,2],ar[2,1]
@@ -165,9 +203,11 @@ class Cube:
 
 cube1 = Cube()
 cube1.display()
-cube1.move('R+')
+cube1.move('W+')
 print("After Move:")
 cube1.display()
-cube1.move('R-')
-print("After Move:")
-cube1.display()
+ar = cube1.get_side('Y')
+print(ar)
+# cube1.move('R-')
+# print("After Move:")
+# cube1.display()

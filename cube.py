@@ -37,11 +37,17 @@ def turn(ar,sig):
 def turnface(C,sig):
     A=np.full([3,3],'')
     if sig=='+':
-        A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[2]),list(C[:,0]),list(C[0]),list(C[:,2]),C[1,1]
+        A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[2]),list(C[:,0])[::-1],list(C[0]),list(C[:,2])[::-1],C[1,1]
+        print(C[2])
     elif sig=='-':
-        A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[0]),list(C[:,2]),list(C[2]),list(C[:,0]),C[1,1]
+        A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[0])[::-1],list(C[:,2]),list(C[2])[::-1],list(C[:,0]),C[1,1]
+    elif sig == 'r0':
+        A[0], A[1], A[2] = list(C[2]), list(C[1]), list(C[0])
+    elif sig == 'r1':
+        A[:,0], A[:,1], A[:,2] = list(C[:,2]), list(C[:,1]), list(C[:,0])
+    else:
+        A = C.copy()
     return A
-
 def move(m,cub):
     if m[0]=='W':
         C=cub['W']
@@ -186,5 +192,8 @@ def main():
         show(cub)
         print(st)
 
-main()
-        
+# main()
+ar0 = np.array([['1','2','3'],['4','5','6'],['7','8','9']])
+ar = turnface(ar0,'-')
+print(ar0)
+print(ar)
