@@ -20,12 +20,13 @@ class Cube:
         cub = self.cub
         for i in cub.values():
             print(i)
+            print()
     
     def turnface(self,C,sig): #turning an array
         A=np.full([3,3],'')
         if sig=='+':
             A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[2]),list(C[:,0])[::-1],list(C[0]),list(C[:,2])[::-1],C[1,1]
-            print(C[2])
+            # print(C[2])
         elif sig=='-':
             A[:,0],A[0],A[:,2],A[2],A[1,1]=list(C[0])[::-1],list(C[:,2]),list(C[2])[::-1],list(C[:,0]),C[1,1]
         elif sig == 'r0':
@@ -76,6 +77,8 @@ class Cube:
     #     face = m[0]
     #     face_map = self.face_map
     #     turn_map = self.turn_map
+
+
 
 
     def move(self,m):
@@ -203,7 +206,7 @@ class Cube:
 
 cube1 = Cube()
 cube1.display()
-cube1.move('W+')
+cube1.move('B+')
 print("After Move:")
 cube1.display()
 ar = cube1.get_side('Y')
