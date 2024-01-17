@@ -32,7 +32,6 @@ class Cube:
         if sig=='+':
             a,b,c,d=list(D[0]),list(L[:,2]),list(U[2]),list(R[:,0])
             L[:,2],U[2],R[:,0],D[0]=a,b,c,d
-            print(D[0])
             C = self.turnface(C,'+')
         elif sig=='-':
             a,b,c,d=list(U[2]),list(R[:,0]),list(D[0]),list(L[:,2])
@@ -166,6 +165,9 @@ class Cube:
 
 cube1 = Cube()
 cube1.display()
-cube1.move('W+')
+cube1.move('R+')
+print("After Move:")
+cube1.display()
+cube1.move('R-')
 print("After Move:")
 cube1.display()
