@@ -22,6 +22,13 @@ class Cube:
             print(i)
             print()
     
+    def score(self):
+        '''Returns what percent of the cube is solved
+        How many peices are in the correct position and orientation?/Total no of peices(=20)'''
+    
+    def pos_score(self):
+        '''Returns percent of pices in the right position but not in the right orientation'''
+    
     def turnface(self,C,sig): #turning an array
         A=np.full([3,3],'')
         if sig=='+':
